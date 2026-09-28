@@ -1,0 +1,50 @@
+{
+    "threshold": 50,
+    "model_slug": null,
+    "reasoning_level": null,
+    "is_blocking": true,
+    "data_collection_id": null,
+    "project_id": null,
+    "alias": null,
+    "evaluations": [
+        {
+            "metrics": [
+                {
+                    "metric": "ans_rel",
+                    "metric_args": null,
+                    "threshold": 80,
+                    "model_slug": null,
+                    "reasoning_level": null
+                },
+                {
+                    "metric": "summ",
+                    "metric_args": null,
+                    "threshold": 80,
+                    "model_slug": null,
+                    "reasoning_level": null
+                }
+            ],
+            "threshold": null,
+            "model_slug": null,
+            "reasoning_level": null,
+            "data": [
+                {
+                    "external_id": null,
+                    "prompt": null,
+                    "input": "What are the features of the apartment when it comes to the view?",
+                    "context": null,
+                    "output": "Nestled on the tenth floor of a modern high-rise, the apartment offers a breathtaking panorama of the city skyline. At night, the twinkling lights stretch endlessly, illuminating the quiet solitude of the space.",
+                    "golden_answer": null
+                },
+                {
+                    "external_id": null,
+                    "prompt": null,
+                    "input": "France is a country located in Western Europe with a rich historical and cultural heritage. France is renowned for its contributions to art, philosophy, and literature. Paris, its capital, is celebrated worldwide for landmarks such as the Eiffel Tower and the Louvre Museum. The country's diverse landscape spans from the sun-drenched Mediterranean coast to the snow-capped peaks of the Alps. French cuisine, famous for its delicate pastries and gourmet dishes, has influenced culinary traditions globally. The nation is a leader in fashion and luxury, housing many of the world's most prestigious brands. France is also known for its revolutionary history, which has shaped modern democratic ideals. The country boasts numerous UNESCO World Heritage Sites that testify to its historical significance. Its economy is robust, driven by tourism, agriculture, and technology. Overall, France continues to enchant visitors and residents alike with its unique blend of modern innovation and timeless charm.",
+                    "context": null,
+                    "output": "France is a culturally rich country in Western Europe known for its influential history, art, and literature. Its capital, Paris, is celebrated for its gourmet cuisine and high fashion. The nation boasts diverse landscapes—from Mediterranean coasts to Alpine peaks—and is famed for its gourmet cuisine and high fashion. With a robust economy and numerous UNESCO sites, France blends modern innovation with timeless charm.",
+                    "golden_answer": null
+                }
+            ]
+        }
+    ]
+}
