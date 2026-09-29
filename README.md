@@ -27,9 +27,9 @@ cd node
 pnpm install
 ```
 
-The examples are TypeScript Vitest test files, so run them through Vitest rather than with `node` directly.
+Tests live in `test_examples/` as `*.test.ts` files and run through Vitest rather than with `node` directly. Standalone scripts go in `script_examples/`.
 
-Run all examples:
+Run all tests:
 
 ```bash
 pnpm test
@@ -38,8 +38,8 @@ pnpm test
 Run a single file:
 
 ```bash
-pnpm vitest run custom_run_blocking.test.ts
-pnpm vitest run custom_run_nonblocking.test.ts
+pnpm vitest run test_examples/custom_run_blocking.test.ts
+pnpm vitest run test_examples/custom_run_nonblocking.test.ts
 ```
 
 Vitest strips types without checking them. To type-check:
@@ -59,7 +59,13 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Run all examples. They run in parallel, one worker per CPU:
+Tests live in `test_examples/` as `test_*.py` files. Standalone scripts go in `script_examples/`; run them from the `python` folder as modules so they can import `constants`:
+
+```bash
+python -m script_examples.your_script
+```
+
+Run all tests. They run in parallel, one worker per CPU:
 
 ```bash
 pytest
@@ -68,5 +74,5 @@ pytest
 Run a single file:
 
 ```bash
-pytest custom_run_nonblocking.py
+pytest test_examples/test_custom_run_nonblocking.py
 ```

@@ -11,7 +11,7 @@ from constants import (
     DEFAULT_REFETCH_INTERVAL,
     ROOT_DIR,
 )
-from types import CustomRunRequest
+from aegis_types import CustomRunRequest
 
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 

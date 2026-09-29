@@ -5,9 +5,9 @@ import {
     API_KEY,
     API_RUNS_CUSTOM_URL,
     DEFAULT_RUN_TIMEOUT,
-} from "./constants.ts";
-import type { CustomRunRequest } from "./types.ts";
-import data from "../data.json" with { type: "json" };
+} from "../constants.ts";
+import type { CustomRunRequest } from "../aegis_types.ts";
+import data from "../../data.json" with { type: "json" };
 
 const client = axios.create({
     headers: { Authorization: `Bearer ${API_KEY}` },

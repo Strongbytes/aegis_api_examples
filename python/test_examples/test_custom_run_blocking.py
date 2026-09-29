@@ -3,7 +3,7 @@ import json
 import requests
 
 from constants import API_KEY, API_RUNS_CUSTOM_URL, DEFAULT_RUN_TIMEOUT, ROOT_DIR
-from types import CustomRunRequest
+from aegis_types import CustomRunRequest
 
 
 def test_custom_run_blocking():
