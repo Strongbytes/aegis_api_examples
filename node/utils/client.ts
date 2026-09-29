@@ -1,9 +1,10 @@
 import axios, { type AxiosInstance, isAxiosError } from "axios";
 
-import { API_KEY, DEFAULT_REQUEST_TIMEOUT } from "../constants.ts";
+import { API_BASE_URL, API_KEY, DEFAULT_REQUEST_TIMEOUT } from "../constants.ts";
 
 export function createAegisClient(timeout: number = DEFAULT_REQUEST_TIMEOUT): AxiosInstance {
     const client = axios.create({
+        baseURL: API_BASE_URL,
         headers: { Authorization: `Bearer ${API_KEY}` },
         timeout,
     });

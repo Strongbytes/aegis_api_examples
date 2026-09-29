@@ -1,6 +1,6 @@
 import data from "../../data/dataset_run_data.json" with { type: "json" };
 import type { DatasetRunRequest, RunResponse } from "../aegis_types.ts";
-import { API_RUNS_DATASET_URL, DEFAULT_RUN_TIMEOUT } from "../constants.ts";
+import { API_RUNS_DATASET_PATH, DEFAULT_RUN_TIMEOUT } from "../constants.ts";
 import { createAegisClient } from "../utils/client.ts";
 import { logRun } from "../utils/logging.ts";
 import { downloadRunReport } from "../utils/run_report_download.ts";
@@ -9,9 +9,9 @@ async function main(): Promise<void> {
     try {
         const client = createAegisClient(DEFAULT_RUN_TIMEOUT);
 
-        const payload: DatasetRunRequest = data;
+        const payload: DatasetRunRequest = { ...data, is_blocking: true };
 
-        const { data: run } = await client.post<RunResponse>(API_RUNS_DATASET_URL, payload);
+        const { data: run } = await client.post<RunResponse>(API_RUNS_DATASET_PATH, payload);
         logRun(run);
 
         const reportPath = await downloadRunReport(client, run.id);

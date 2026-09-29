@@ -1,7 +1,7 @@
 import { setTimeout as sleep } from "node:timers/promises";
 import type { AxiosInstance } from "axios";
 import type { RunResponse } from "../aegis_types.ts";
-import { API_RUNS_URL, DEFAULT_REFETCH_INTERVAL, DEFAULT_RUN_TIMEOUT } from "../constants.ts";
+import { API_RUNS_PATH, DEFAULT_REFETCH_INTERVAL, DEFAULT_RUN_TIMEOUT } from "../constants.ts";
 
 export async function waitForRunToFinish(
     client: AxiosInstance,
@@ -12,7 +12,7 @@ export async function waitForRunToFinish(
     while (Date.now() < deadline) {
         await sleep(DEFAULT_REFETCH_INTERVAL);
 
-        const { data: run } = await client.get<RunResponse>(`${API_RUNS_URL}/${runId}`);
+        const { data: run } = await client.get<RunResponse>(`${API_RUNS_PATH}/${runId}`);
 
         if (run.finished_at !== null) {
             return run;

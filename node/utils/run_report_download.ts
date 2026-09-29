@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { AxiosInstance } from "axios";
 import type { RunResponse } from "../aegis_types.ts";
-import { API_RUNS_URL } from "../constants.ts";
+import { API_RUNS_PATH } from "../constants.ts";
 
 const RUN_REPORTS_DIR = path.resolve(import.meta.dirname, "../run_reports");
 
@@ -31,7 +31,7 @@ export async function downloadRunReport(
     client: AxiosInstance,
     runId: RunResponse["id"],
 ): Promise<string> {
-    const response = await client.get<ArrayBuffer>(`${API_RUNS_URL}/${runId}/download`, {
+    const response = await client.get<ArrayBuffer>(`${API_RUNS_PATH}/${runId}/download`, {
         responseType: "arraybuffer",
     });
 

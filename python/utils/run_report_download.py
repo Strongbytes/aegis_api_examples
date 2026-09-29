@@ -4,7 +4,7 @@ from pathlib import Path
 
 import httpx
 
-from constants import API_RUNS_URL
+from constants import API_RUNS_PATH
 
 RUN_REPORTS_DIR = Path(__file__).resolve().parent.parent / "run_reports"
 
@@ -30,7 +30,7 @@ def extension_from_headers(headers: httpx.Headers) -> str:
 
 
 def download_run_report(client: httpx.Client, run_id: int) -> Path:
-    response = client.get(f"{API_RUNS_URL}/{run_id}/download")
+    response = client.get(f"{API_RUNS_PATH}/{run_id}/download")
 
     timestamp = re.sub(
         r"[:.]",

@@ -2,7 +2,7 @@ import json
 import sys
 
 from aegis_types import CustomRunRequest, RunResponse
-from constants import API_RUNS_CUSTOM_URL, DEFAULT_RUN_TIMEOUT, ROOT_DIR
+from constants import API_RUNS_CUSTOM_PATH, DEFAULT_RUN_TIMEOUT, ROOT_DIR
 from utils.client import create_aegis_client
 from utils.reporting import log_run
 from utils.run_report_download import download_run_report
@@ -11,11 +11,12 @@ from utils.run_report_download import download_run_report
 def main() -> None:
     try:
         with create_aegis_client(DEFAULT_RUN_TIMEOUT) as client:
-            payload: CustomRunRequest = json.loads(
+            data: CustomRunRequest = json.loads(
                 (ROOT_DIR / "data/custom_run_data.json").read_text(encoding="utf-8")
             )
+            payload: CustomRunRequest = {**data, "is_blocking": True}
 
-            run: RunResponse = client.post(API_RUNS_CUSTOM_URL, json=payload).json()
+            run: RunResponse = client.post(API_RUNS_CUSTOM_PATH, json=payload).json()
             log_run(run)
 
             report_path = download_run_report(client, run["id"])

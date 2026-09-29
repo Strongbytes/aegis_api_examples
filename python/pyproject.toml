@@ -21,7 +21,7 @@ test = [
 dev = [
     { include-group = "test" },
     "mypy>=2.3",
-    "ruff>=0.16",
+    "ruff==0.16.9",
 ]
 
 [tool.setuptools]

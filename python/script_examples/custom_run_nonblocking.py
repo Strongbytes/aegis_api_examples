@@ -2,7 +2,7 @@ import json
 import sys
 
 from aegis_types import CustomRunRequest, RunResponse
-from constants import API_RUNS_CUSTOM_URL, ROOT_DIR
+from constants import API_RUNS_CUSTOM_PATH, ROOT_DIR
 from utils.client import create_aegis_client
 from utils.polling import wait_for_run_to_finish
 from utils.reporting import log_run
@@ -17,7 +17,7 @@ def main() -> None:
             )
             payload: CustomRunRequest = {**data, "is_blocking": False}
 
-            started_run: RunResponse = client.post(API_RUNS_CUSTOM_URL, json=payload).json()
+            started_run: RunResponse = client.post(API_RUNS_CUSTOM_PATH, json=payload).json()
 
             run = wait_for_run_to_finish(client, started_run["id"])
             log_run(run)

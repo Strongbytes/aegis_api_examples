@@ -7,7 +7,7 @@ The examples live in `test_examples/` under both `node/` and `python/`, and both
 - **Custom runs** (`custom_run_*`) send the full evaluation in the request: metrics, thresholds, and the data to evaluate. The payload is in `data/custom_run_data.json`.
 - **Dataset runs** (`dataset_run_*`) point to a dataset that already exists in Aegis by its ID. The payload is in `data/dataset_run_data.json`.
 
-Each case has a blocking and a non-blocking version. The blocking test waits for the API to return the finished run in a single request. The non-blocking test starts the run, then polls `/runs/{id}` until it finishes, which suits long runs that could outlast a request timeout.
+Each case has a blocking and a non-blocking version. Each example sets `is_blocking` itself, so the value in the data file doesn't change which one runs. The blocking version waits for the API to return the finished run in a single request. The non-blocking version starts the run, then polls `/runs/{id}` until it finishes, which suits long runs that could outlast a request timeout. Both give up after 5 minutes, set by `DEFAULT_RUN_TIMEOUT` in `node/constants.ts` and `python/constants.py`.
 
 Both languages read the same payload files in `data/`, so edit those to run the examples against your own metrics, datasets, and thresholds.
 
@@ -21,13 +21,19 @@ Copy the env template and fill in your values:
 cp .env.template .env
 ```
 
-```
+```dotenv
 AEGIS_API_URL=https://your-aegis-host
 AEGIS_API_KEY=your-api-key
 AEGIS_REFETCH_INTERVAL_SECONDS=10
 ```
 
-Both the Node and Python examples read this root `.env` file. `AEGIS_REFETCH_INTERVAL_SECONDS` is how often the non-blocking examples poll for results (defaults to 10).
+Both the Node and Python examples read this root `.env` file:
+
+- `AEGIS_API_URL` (required) is the base URL of the Aegis API, including any path prefix. The examples append paths such as `/runs/custom` to it.
+- `AEGIS_API_KEY` (required) is sent as a bearer token on every request.
+- `AEGIS_REFETCH_INTERVAL_SECONDS` (optional) is how often the non-blocking examples poll for results. It defaults to 10.
+
+Variables already set in the environment take precedence over `.env`, so a CI pipeline can pass `AEGIS_API_URL` and `AEGIS_API_KEY` from its secrets without creating the file. If a required variable is missing or a value is invalid, the examples stop before sending any request, with an error that names the variable.
 
 ## Node
 
@@ -133,3 +139,22 @@ mypy
 ```
 
 To check without changing any files, as a CI job would, use `ruff check .` and `ruff format --check .` instead.
+
+## Pre-commit hooks
+
+The root `.pre-commit-config.yaml` runs the checks above on every commit, for whichever language you changed. Install [pre-commit](https://pre-commit.com/#install) and, optionally, [gitleaks](https://github.com/gitleaks/gitleaks#installing) for the secret scan, then enable the hooks from the repository root. With Homebrew:
+
+```bash
+brew install pre-commit gitleaks
+pre-commit install
+```
+
+On each commit this runs file hygiene checks (whitespace, end of file, JSON/TOML/YAML syntax, merge conflict markers, large files, private keys), Ruff, Biome, `tsc`, mypy, and gitleaks on the staged changes. It also checks that the commit message follows [Conventional Commits](https://www.conventionalcommits.org/), for example `feat: add dataset run example`. Hooks that fix files, such as the formatters, stop the commit so you can review and stage their changes.
+
+Biome, `tsc`, and mypy run the versions installed in each project, so set up both projects as described above first. mypy runs from `python/.venv` if it exists and falls back to the `mypy` on your `PATH`. If gitleaks isn't installed, the secret scan is skipped with a note.
+
+To run every hook against all files, not only the staged ones:
+
+```bash
+pre-commit run --all-files
+```

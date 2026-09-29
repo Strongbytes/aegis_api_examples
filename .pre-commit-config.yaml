@@ -1,0 +1,75 @@
+# A bare `pre-commit install` wires both stages: the file checks and the
+# Conventional Commits check on the commit message.
+default_install_hook_types: [pre-commit, commit-msg]
+
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v6.0.0
+      hooks:
+          - id: check-added-large-files
+          - id: check-merge-conflict
+          - id: check-json
+          - id: check-toml
+          - id: check-yaml
+          - id: detect-private-key
+          - id: end-of-file-fixer
+            exclude: ^node/pnpm-lock\.yaml$
+          - id: trailing-whitespace
+            exclude: ^node/pnpm-lock\.yaml$
+
+    # Keep the rev in lockstep with the ruff pin in python/pyproject.toml so the
+    # hook and `ruff format --check` in CI never disagree on style.
+    - repo: https://github.com/astral-sh/ruff-pre-commit
+      rev: v0.16.9
+      hooks:
+          - id: ruff-check
+            args: [--fix]
+          - id: ruff-format
+
+    # These hooks call the tools installed in each project (node_modules and the
+    # Python venv) so they use the same versions and config as the README
+    # commands and CI. They need `pnpm install` and the venv set up first.
+    - repo: local
+      hooks:
+          - id: biome
+            name: biome (node)
+            entry: pnpm --dir node fix
+            language: system
+            files: ^node/
+            types_or: [ts, javascript, json]
+            pass_filenames: false
+          - id: tsc
+            name: tsc (node)
+            entry: pnpm --dir node typecheck
+            language: system
+            files: ^node/
+            types_or: [ts, json]
+            pass_filenames: false
+          # mypy reads its scope from [tool.mypy] and resolves the shared modules
+          # relative to python/, so it has to run from there.
+          - id: mypy
+            name: mypy (python)
+            entry: >-
+                bash -c 'cd python &&
+                if [ -x .venv/bin/mypy ]; then exec .venv/bin/mypy; else exec mypy; fi'
+            language: system
+            files: ^python/
+            types_or: [python, toml]
+            pass_filenames: false
+          # Scans only the staged changes. Skips with a note when gitleaks isn't
+          # installed rather than blocking the commit.
+          - id: gitleaks
+            name: gitleaks (staged)
+            entry: >-
+                bash -c 'if ! command -v gitleaks >/dev/null; then
+                echo "gitleaks not installed, skipping secret scan." >&2; exit 0; fi;
+                exec gitleaks git --staged --redact --no-banner --verbose'
+            language: system
+            pass_filenames: false
+            always_run: true
+
+    - repo: https://github.com/compilerla/conventional-pre-commit
+      rev: v4.4.0
+      hooks:
+          - id: conventional-pre-commit
+            stages: [commit-msg]
