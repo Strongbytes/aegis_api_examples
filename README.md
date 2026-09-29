@@ -31,7 +31,7 @@ Both the Node and Python examples read this root `.env` file. `AEGIS_REFETCH_INT
 
 ## Node
 
-Requires [Node.js](https://nodejs.org/) 22.12+ and [pnpm](https://pnpm.io/installation).
+Requires [Node.js](https://nodejs.org/) 22.18+ and [pnpm](https://pnpm.io/installation).
 
 ```bash
 cd node
@@ -59,7 +59,7 @@ Vitest strips types without checking them. To type-check:
 pnpm typecheck
 ```
 
-Scripts in `script_examples/` run with `node` directly, which strips the types itself. This needs Node 22.18+:
+Scripts in `script_examples/` run with `node` directly, which strips the types itself:
 
 ```bash
 node script_examples/custom_run_blocking.ts
@@ -67,6 +67,14 @@ node script_examples/custom_run_nonblocking.ts
 node script_examples/dataset_run_blocking.ts
 node script_examples/dataset_run_nonblocking.ts
 ```
+
+Lint, format, and sort imports with [Biome](https://biomejs.dev/), configured in `biome.json`:
+
+```bash
+pnpm fix
+```
+
+To check without changing any files, as a CI job would, use `pnpm check` instead.
 
 ## Python
 
@@ -80,13 +88,16 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Then install the project in editable mode:
+Then install the project in editable mode, together with the `dev` dependency group:
 
 ```bash
-pip install -e .
+pip install --upgrade pip
+pip install -e . --group dev
 ```
 
 This installs the dependencies listed in `pyproject.toml` and registers the shared modules (`constants`, `aegis_types`, and `utils`) with the virtual environment, so the tests and scripts can import them from any folder. "Editable" means the install points at your source files instead of copying them, so your changes take effect without reinstalling. Run it again only if you change `pyproject.toml`, for example to add a dependency.
+
+Dependency groups need pip 25.1+, hence the upgrade. The `dev` group contains the test tools plus the linter, formatter, and type checker. A CI job that only runs the tests can install the smaller `test` group instead with `pip install -e . --group test`.
 
 Activate the virtual environment (`source .venv/bin/activate`) in each new terminal before running anything below.
 
@@ -112,3 +123,13 @@ python script_examples/custom_run_nonblocking.py
 python script_examples/dataset_run_blocking.py
 python script_examples/dataset_run_nonblocking.py
 ```
+
+Lint, format, and type-check with [Ruff](https://docs.astral.sh/ruff/) and [mypy](https://mypy.readthedocs.io/), both configured in `pyproject.toml`:
+
+```bash
+ruff check --fix .
+ruff format .
+mypy
+```
+
+To check without changing any files, as a CI job would, use `ruff check .` and `ruff format --check .` instead.

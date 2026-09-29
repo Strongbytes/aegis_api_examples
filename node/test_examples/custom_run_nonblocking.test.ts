@@ -1,12 +1,11 @@
 import { describe, expect, it } from "vitest";
-
-import { API_RUNS_CUSTOM_URL } from "../constants.ts";
-import type { CustomRunRequest, RunResponse } from "../aegis_types.ts";
-import { createAegisClient } from "../utils/client.ts";
-import { waitForRunToFinish } from "../utils/polling.ts";
-import { logRun } from "../utils/logging.ts";
-import { expectRunPassed } from "../utils/assertions.ts";
 import data from "../../data/custom_run_data.json" with { type: "json" };
+import type { CustomRunRequest, RunResponse } from "../aegis_types.ts";
+import { API_RUNS_CUSTOM_URL } from "../constants.ts";
+import { expectRunPassed } from "../utils/assertions.ts";
+import { createAegisClient } from "../utils/client.ts";
+import { logRun } from "../utils/logging.ts";
+import { waitForRunToFinish } from "../utils/polling.ts";
 
 const client = createAegisClient();
 

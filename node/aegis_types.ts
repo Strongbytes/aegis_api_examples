@@ -2,9 +2,9 @@ export type JsonValue =
     | string
     | number
     | boolean
-    | null
     | JsonValue[]
-    | { [key: string]: JsonValue };
+    | { [key: string]: JsonValue }
+    | null;
 
 export type MetricConfig = {
     /** Metric shortname. */

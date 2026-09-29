@@ -20,18 +20,12 @@ export function logRun(run: RunResponse): void {
     console.log(`\n${"=".repeat(DELIMITER_WIDTH)}\n`);
 }
 
-export function logEvaluation(
-    evaluation: EvaluationResponse,
-    index: number,
-): void {
+export function logEvaluation(evaluation: EvaluationResponse, index: number): void {
     console.log(header(`Evaluation ${index}`, "-"));
     console.log("Raw data:", JSON.stringify(evaluation, null, 2));
     console.log("Evaluation success:", evaluation.is_success);
     console.log("Evaluation result:", evaluation.result);
     console.log("Evaluation threshold:", evaluation.threshold);
     console.log("Evaluation finished at:", evaluation.finished_at);
-    console.log(
-        "Evaluation is greater than threshold:",
-        evaluation.is_gte_threshold,
-    );
+    console.log("Evaluation is greater than threshold:", evaluation.is_gte_threshold);
 }
