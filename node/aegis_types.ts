@@ -55,8 +55,8 @@ export type DatasetRunRequest = {
 
 export type EvaluationResponse = {
     result: number | null;
-    threshold: number | null;
-    is_success: boolean;
+    threshold: number;
+    is_success: boolean | null;
     is_gte_threshold: boolean | null;
     finished_at: string | null;
 };
@@ -64,7 +64,7 @@ export type EvaluationResponse = {
 export type RunResponse = {
     id: number;
     result: number | null;
-    threshold: number | null;
+    threshold: number;
     is_gte_threshold: boolean | null;
     finished_at: string | null;
     evaluations: EvaluationResponse[] | null;

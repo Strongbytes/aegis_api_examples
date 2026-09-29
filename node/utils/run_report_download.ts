@@ -5,10 +5,7 @@ import type { AxiosInstance } from "axios";
 import { API_RUNS_URL } from "../constants.ts";
 import type { RunResponse } from "../aegis_types.ts";
 
-const RUN_REPORTS_DIR = path.resolve(
-    import.meta.dirname,
-    "../run_reports",
-);
+const RUN_REPORTS_DIR = path.resolve(import.meta.dirname, "../run_reports");
 
 const EXTENSIONS_BY_CONTENT_TYPE: Record<string, string> = {
     "application/json": ".json",

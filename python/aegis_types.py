@@ -1,11 +1,12 @@
-from typing import Any, TypeAlias, TypedDict
+from typing import TypeAlias, TypedDict
 
-JsonValue: TypeAlias = str | int | float | bool | dict[str, Any] | list[Any] | None
+JsonValue: TypeAlias = "str | int | float | bool | None | list[JsonValue] | dict[str, JsonValue]"
 
 
 class MetricConfig(TypedDict):
     metric: str
-    metric_args: dict[str, Any] | None
+    """Metric shortname."""
+    metric_args: dict[str, JsonValue] | None
     threshold: int | None
     model_slug: str | None
     reasoning_level: str | None
@@ -19,7 +20,7 @@ class EvaluationDataItem(TypedDict):
     external_id: str | None
     prompt: str | None
     input: JsonValue
-    context: str | list[Any] | None
+    context: str | list[JsonValue] | None
     output: JsonValue
     golden_answer: JsonValue
 
@@ -52,8 +53,8 @@ class DatasetRunRequest(TypedDict):
 
 class EvaluationResponse(TypedDict):
     result: float | None
-    threshold: float | None
-    is_success: bool
+    threshold: int
+    is_success: bool | None
     is_gte_threshold: bool | None
     finished_at: str | None
 
@@ -61,7 +62,7 @@ class EvaluationResponse(TypedDict):
 class RunResponse(TypedDict):
     id: int
     result: float | None
-    threshold: float | None
+    threshold: int
     is_gte_threshold: bool | None
     finished_at: str | None
     evaluations: list[EvaluationResponse] | None
