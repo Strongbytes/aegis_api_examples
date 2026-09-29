@@ -5,26 +5,26 @@ import requests
 
 from constants import (
     API_KEY,
-    API_RUNS_CUSTOM_URL,
+    API_RUNS_DATASET_URL,
     API_RUNS_URL,
     DEFAULT_RUN_TIMEOUT,
     DEFAULT_REFETCH_INTERVAL,
     ROOT_DIR,
 )
-from aegis_types import CustomRunRequest
+from aegis_types import DatasetRunRequest
 
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
 
-def test_custom_run_nonblocking():
-    data: CustomRunRequest = json.loads(
-        (ROOT_DIR / "data/custom_run_data.json").read_text(encoding="utf-8")
+def test_dataset_run_nonblocking():
+    data: DatasetRunRequest = json.loads(
+        (ROOT_DIR / "data/dataset_run_data.json").read_text(encoding="utf-8")
     )
     data["is_blocking"] = False
 
     try:
         response = requests.post(
-            API_RUNS_CUSTOM_URL,
+            API_RUNS_DATASET_URL,
             json=data,
             headers=HEADERS,
             timeout=60,
@@ -89,7 +89,7 @@ def test_custom_run_nonblocking():
             ), f"evaluation {i} finished_at is None"
             assert (
                 evaluation.get("is_success") is True
-            ), f"evaluation {i} success is {evaluation.get('success')!r}"
+            ), f"evaluation {i} success is {evaluation.get('is_success')!r}"
             assert evaluation.get("is_gte_threshold") is True, (
                 f"evaluation {i} is_gte_threshold is "
                 f"{evaluation.get('is_gte_threshold')!r}"

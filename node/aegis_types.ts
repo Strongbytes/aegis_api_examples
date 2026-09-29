@@ -45,3 +45,10 @@ export type CustomRunRequest = {
     alias: string | null;
     evaluations: Evaluation[];
 };
+
+export type DatasetRunRequest = {
+    dataset_id: number;
+    threshold: number | null;
+    model_slug: string | null;
+    is_blocking: boolean;
+};

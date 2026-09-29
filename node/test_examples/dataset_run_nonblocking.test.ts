@@ -3,25 +3,25 @@ import { describe, expect, it } from "vitest";
 
 import {
     API_KEY,
-    API_RUNS_CUSTOM_URL,
+    API_RUNS_DATASET_URL,
     API_RUNS_URL,
     DEFAULT_RUN_TIMEOUT,
     DEFAULT_REFETCH_INTERVAL,
 } from "../constants.ts";
-import type { CustomRunRequest } from "../aegis_types.ts";
-import data from "../../data/custom_run_data.json" with { type: "json" };
+import type { DatasetRunRequest } from "../aegis_types.ts";
+import data from "../../data/dataset_run_data.json" with { type: "json" };
 
 const client = axios.create({
     headers: { Authorization: `Bearer ${API_KEY}` },
     timeout: 60_000,
 });
 
-describe("Custom Run - Non-Blocking", () => {
-    it("Should successfully run custom non-blocking evaluation and validate results", async () => {
-        const payload: CustomRunRequest = { ...data, is_blocking: false };
+describe("Dataset Run - Non-Blocking", () => {
+    it("Should successfully run dataset non-blocking evaluation and validate results", async () => {
+        const payload: DatasetRunRequest = { ...data, is_blocking: false };
 
         try {
-            const response = await client.post(API_RUNS_CUSTOM_URL, payload);
+            const response = await client.post(API_RUNS_DATASET_URL, payload);
             const { status, data: initialResponseData } = response;
             const { id } = initialResponseData;
             let finished_at = initialResponseData.finished_at;

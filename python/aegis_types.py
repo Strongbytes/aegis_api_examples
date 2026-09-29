@@ -1,8 +1,6 @@
 from typing import Any, TypeAlias, TypedDict
 
-JsonValue: TypeAlias = (
-    str | int | float | bool | dict[str, Any] | list[Any] | None
-)
+JsonValue: TypeAlias = str | int | float | bool | dict[str, Any] | list[Any] | None
 
 
 class MetricConfig(TypedDict):
@@ -43,3 +41,10 @@ class CustomRunRequest(TypedDict):
     project_id: int | None
     alias: str | None
     evaluations: list[Evaluation]
+
+
+class DatasetRunRequest(TypedDict):
+    dataset_id: int
+    threshold: int | None
+    model_slug: str | None
+    is_blocking: bool
