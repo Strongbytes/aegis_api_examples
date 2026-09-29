@@ -11,6 +11,8 @@ Each case has a blocking and a non-blocking version. The blocking test waits for
 
 Both languages read the same payload files in `data/`, so edit those to run the examples against your own metrics, datasets, and thresholds.
 
+Each language also has the same four cases as standalone scripts in `script_examples/`. A script starts the run, prints the results without checking them, and downloads the run report from `/runs/{id}/download` into a `run_reports/` folder next to it (`node/run_reports/` or `python/run_reports/`). Each report is saved as `run_{id}_{timestamp}` so earlier reports are never overwritten. The `run_reports/` folders are git-ignored.
+
 ## Setup
 
 Copy the env template and fill in your values:
@@ -36,7 +38,7 @@ cd node
 pnpm install
 ```
 
-Tests live in `test_examples/` as `*.test.ts` files and run through Vitest rather than with `node` directly. Standalone scripts go in `script_examples/`.
+Tests live in `test_examples/` as `*.test.ts` files and run through Vitest rather than with `node` directly.
 
 Run all tests:
 
@@ -57,22 +59,38 @@ Vitest strips types without checking them. To type-check:
 pnpm typecheck
 ```
 
+Scripts in `script_examples/` run with `node` directly, which strips the types itself. This needs Node 22.18+:
+
+```bash
+node script_examples/custom_run_blocking.ts
+node script_examples/custom_run_nonblocking.ts
+node script_examples/dataset_run_blocking.ts
+node script_examples/dataset_run_nonblocking.ts
+```
+
 ## Python
 
 Requires [Python](https://www.python.org/downloads/) 3.10+.
+
+Create a virtual environment inside the `python` folder and activate it:
 
 ```bash
 cd python
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
 ```
 
-Tests live in `test_examples/` as `test_*.py` files. Standalone scripts go in `script_examples/`; run them from the `python` folder as modules so they can import `constants`:
+Then install the project in editable mode:
 
 ```bash
-python -m script_examples.your_script
+pip install -e .
 ```
+
+This installs the dependencies listed in `pyproject.toml` and registers the shared modules (`constants`, `aegis_types`, and `utils`) with the virtual environment, so the tests and scripts can import them from any folder. "Editable" means the install points at your source files instead of copying them, so your changes take effect without reinstalling. Run it again only if you change `pyproject.toml`, for example to add a dependency.
+
+Activate the virtual environment (`source .venv/bin/activate`) in each new terminal before running anything below.
+
+Tests live in `test_examples/` as `test_*.py` files.
 
 Run all tests. They run in parallel, one worker per CPU:
 
@@ -84,4 +102,13 @@ Run a single file:
 
 ```bash
 pytest test_examples/test_custom_run_nonblocking.py
+```
+
+Run a script from `script_examples/`:
+
+```bash
+python script_examples/custom_run_blocking.py
+python script_examples/custom_run_nonblocking.py
+python script_examples/dataset_run_blocking.py
+python script_examples/dataset_run_nonblocking.py
 ```

@@ -1,3 +1,6 @@
 .venv
 __pycache__
 .pytest_cache
+run_reports
+*.egg-info
+build
