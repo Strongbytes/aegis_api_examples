@@ -16,4 +16,5 @@ export const API_RUNS_DATASET_URL = `${API_BASE_URL}/runs/dataset`;
 export const DEFAULT_REFETCH_INTERVAL =
     Number(process.env.AEGIS_REFETCH_INTERVAL_SECONDS || 10) * 1000;
 
+export const DEFAULT_REQUEST_TIMEOUT = 60 * 1000;
 export const DEFAULT_RUN_TIMEOUT = 5 * 60 * 1000;

@@ -48,3 +48,20 @@ class DatasetRunRequest(TypedDict):
     threshold: int | None
     model_slug: str | None
     is_blocking: bool
+
+
+class EvaluationResponse(TypedDict):
+    result: float | None
+    threshold: float | None
+    is_success: bool
+    is_gte_threshold: bool | None
+    finished_at: str | None
+
+
+class RunResponse(TypedDict):
+    id: int
+    result: float | None
+    threshold: float | None
+    is_gte_threshold: bool | None
+    finished_at: str | None
+    evaluations: list[EvaluationResponse] | None

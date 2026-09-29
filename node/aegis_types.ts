@@ -52,3 +52,20 @@ export type DatasetRunRequest = {
     model_slug: string | null;
     is_blocking: boolean;
 };
+
+export type EvaluationResponse = {
+    result: number | null;
+    threshold: number | null;
+    is_success: boolean;
+    is_gte_threshold: boolean | null;
+    finished_at: string | null;
+};
+
+export type RunResponse = {
+    id: number;
+    result: number | null;
+    threshold: number | null;
+    is_gte_threshold: boolean | null;
+    finished_at: string | null;
+    evaluations: EvaluationResponse[] | null;
+};
