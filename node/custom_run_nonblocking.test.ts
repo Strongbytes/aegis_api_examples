@@ -8,7 +8,7 @@ import {
     DEFAULT_RUN_TIMEOUT,
     DEFAULT_REFETCH_INTERVAL,
 } from "./constants.ts";
-import type { CustomRunRequest } from "./custom_run_types.ts";
+import type { CustomRunRequest } from "./types.ts";
 import data from "../data.json" with { type: "json" };
 
 const client = axios.create({
@@ -27,8 +27,8 @@ describe("Custom Run - Non-Blocking", () => {
             let finished_at = initialResponseData.finished_at;
             let finalResponseData = null;
 
-            console.info("Status:", status);
-            console.info("Finished at:", finished_at);
+            console.log("Status:", status);
+            console.log("Finished at:", finished_at);
 
             expect(status).toBe(201);
             expect(finished_at).toBe(null);
@@ -50,34 +50,45 @@ describe("Custom Run - Non-Blocking", () => {
                 finished_at = finalResponseData.finished_at;
             }
 
-            const { evaluations, result, threshold } = finalResponseData;
+            const { evaluations, result, threshold, is_gte_threshold } =
+                finalResponseData;
 
-            console.info("Result:", result);
-            console.info("Threshold:", threshold);
-            console.info("Final finished at:", finished_at);
+            console.log("Result:", result);
+            console.log("Threshold:", threshold);
+            console.log("Is greater than threshold:", is_gte_threshold);
+            console.log("Final finished at:", finished_at);
 
+            expect(finished_at).not.toBeNull();
             expect(evaluations).not.toBeNull();
             expect(evaluations.length).toBeGreaterThan(0);
-            expect(result).toBeGreaterThanOrEqual(threshold);
+            expect(is_gte_threshold).toBe(true);
 
             for (const [i, evaluation] of evaluations.entries()) {
-                console.debug(
+                console.log(
                     `Evaluation ${i}:`,
                     JSON.stringify(evaluation, null, 2),
                 );
-                console.debug("Evaluation result:", evaluation.result);
-                console.debug("Evaluation threshold:", evaluation.threshold);
-                console.debug(
-                    "Evaluation finished at:",
-                    evaluation.finished_at,
+                console.log("Evaluation success:", evaluation.is_success);
+                console.log("Evaluation result:", evaluation.result);
+                console.log("Evaluation threshold:", evaluation.threshold);
+                console.log("Evaluation finished at:", evaluation.finished_at);
+                console.log(
+                    "Evaluation is greater than threshold:",
+                    evaluation.is_gte_threshold,
                 );
 
                 expect
                     .soft(evaluation.finished_at, `evaluation ${i} finished_at`)
                     .not.toBeNull();
                 expect
-                    .soft(evaluation.result, `evaluation ${i} result`)
-                    .toBeGreaterThanOrEqual(evaluation.threshold);
+                    .soft(evaluation.is_success, `evaluation ${i} success`)
+                    .toBe(true);
+                expect
+                    .soft(
+                        evaluation.is_gte_threshold,
+                        `evaluation ${i} is_gte_threshold`,
+                    )
+                    .toBe(true);
             }
         } catch (error) {
             if (error instanceof AxiosError) {

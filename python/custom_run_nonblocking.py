@@ -11,7 +11,7 @@ from constants import (
     DEFAULT_REFETCH_INTERVAL,
     ROOT_DIR,
 )
-from custom_run_types import CustomRunRequest
+from types import CustomRunRequest
 
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
@@ -62,29 +62,37 @@ def test_custom_run_nonblocking():
         evaluations = final_response_data.get("evaluations")
         result = final_response_data.get("result")
         threshold = final_response_data.get("threshold")
+        is_gte_threshold = final_response_data.get("is_gte_threshold")
 
         print("Result:", result)
         print("Threshold:", threshold)
+        print("Is greater than threshold:", is_gte_threshold)
         print("Final finished at:", finished_at)
 
+        assert finished_at is not None
         assert evaluations
-        assert result >= threshold
+        assert is_gte_threshold is True, f"run is_gte_threshold is {is_gte_threshold!r}"
 
         for i, evaluation in enumerate(evaluations):
             print(f"Evaluation {i}:", json.dumps(evaluation, indent=2))
+            print("Evaluation success:", evaluation.get("is_success"))
             print("Evaluation result:", evaluation.get("result"))
             print("Evaluation threshold:", evaluation.get("threshold"))
             print("Evaluation finished at:", evaluation.get("finished_at"))
+            print(
+                "Evaluation is greater than threshold:",
+                evaluation.get("is_gte_threshold"),
+            )
 
             assert (
                 evaluation.get("finished_at") is not None
             ), f"evaluation {i} finished_at is None"
             assert (
-                evaluation.get("result") is not None
-            ), f"evaluation {i} result is None"
-            assert evaluation["result"] >= evaluation["threshold"], (
-                f"evaluation {i} result {evaluation['result']} "
-                f"< threshold {evaluation['threshold']}"
+                evaluation.get("is_success") is True
+            ), f"evaluation {i} success is {evaluation.get('success')!r}"
+            assert evaluation.get("is_gte_threshold") is True, (
+                f"evaluation {i} is_gte_threshold is "
+                f"{evaluation.get('is_gte_threshold')!r}"
             )
     except requests.RequestException as error:
         print(
